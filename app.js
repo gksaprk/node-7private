@@ -1,10 +1,14 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cookieParser from "cookie-parser";
 import UsersRouter from "./routers/users.router.js";
 import DocumentsRouter from "./routers/documents.router.js";
 
 const app = express();
-const PORT = 3018;
+const port = process.env.PORT || 3020;
+const databaseUrl = process.env.DATABASE_URL;
+console.log(databaseUrl);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -14,6 +18,6 @@ app.use(express.static("public"));
 
 app.use("/api", UsersRouter, DocumentsRouter);
 
-app.listen(PORT, () => {
-  console.log(PORT, "포트로 서버가 열렸어요!");
+app.listen(port, () => {
+  console.log(port, "포트로 서버가 열렸어요!");
 });
