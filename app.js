@@ -9,6 +9,9 @@ const PORT = 3018;
 app.use(express.json());
 app.use(cookieParser());
 
+// 예시: public 디렉터리의 파일을 정적 파일로 서빙
+app.use(express.static("public"));
+
 app.use("/api", UsersRouter, DocumentsRouter);
 
 app.listen(PORT, () => {
