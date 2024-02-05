@@ -10,7 +10,7 @@
 - 구글 Docs 공유 URL 추가
 
 # ERD URL
-- ERD 작성한 위치 URL 추가
+- [ERD 작성한 위치 URL 추가](https://www.erdcloud.com/d/ZBGydga327DqBh65N)
 
 # 더 고민해 보기
 1. **암호화 방식**
