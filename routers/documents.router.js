@@ -115,7 +115,6 @@ router.delete(
   authMiddleware,
   async (req, res, next) => {
     try {
-      const { title, introduction, status } = req.body;
       const { documentId } = req.params;
       const { userId } = req.user;
 
