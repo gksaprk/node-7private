@@ -1,10 +1,10 @@
-import express from "express";
-import { prisma } from "../models/index.js";
-import authMiddleware from "../middlewares/need-signin.middlware.js";
+import express from 'express';
+import { prisma } from '../models/index.js';
+import authMiddleware from '../middlewares/need-signin.middlware.js';
 
 const router = express.Router();
 
-router.post("/documents", authMiddleware, async (req, res, next) => {
+router.post('/documents', authMiddleware, async (req, res, next) => {
   try {
     const { title, introduction, name, status } = req.body;
     const { userId } = req.user;
@@ -15,7 +15,7 @@ router.post("/documents", authMiddleware, async (req, res, next) => {
         title: title,
         introduction: introduction,
         name: name,
-        status: status,
+        status: status || 'APPLY',
       },
     });
 
@@ -25,8 +25,28 @@ router.post("/documents", authMiddleware, async (req, res, next) => {
   }
 });
 // 목록조회
-router.get("/documents", async (req, res, next) => {
+router.get('/documents', async (req, res, next) => {
   try {
+    // const { orderKey, orderValue } = req.query;
+
+    // const allowedOrderKeys = [
+    //   'userId',
+    //   'createdAt',
+    //   'titel',
+    //   'introduction',
+    //   'status',
+    //   'name',
+    //   'updatedAt',
+    // ];
+    // const isValidOrderKey = allowedOrderKeys.includes(orderKey);
+
+    // if (!isValidOrderKey) {
+    //   return res.status(400).json({ message: '유효하지 않은 키입니다.' });
+    // }
+
+    // const sortOrderValue =
+    //   orderValue?.toUpperCase() === 'DESC' ? 'desc' : 'asc';
+
     const documents = await prisma.documents.findMany({
       select: {
         documentId: true,
@@ -38,7 +58,8 @@ router.get("/documents", async (req, res, next) => {
         updatedAt: true,
       },
       orderBy: {
-        createdAt: "desc", // 게시글을 최신순으로 정렬합니다.
+        // [orderKey]: sortOrderValue,
+        createdAt: 'desc', // 게시글을 최신순으로 정렬합니다.
       },
     });
 
@@ -50,7 +71,7 @@ router.get("/documents", async (req, res, next) => {
 
 //상세조회
 
-router.get("/documents/:documentId", async (req, res, next) => {
+router.get('/documents/:documentId', async (req, res, next) => {
   try {
     const { documentId } = req.params;
     const document = await prisma.documents.findFirst({
@@ -75,7 +96,7 @@ router.get("/documents/:documentId", async (req, res, next) => {
 });
 
 // 수정
-router.put("/documents/:documentId", authMiddleware, async (req, res, next) => {
+router.put('/documents/:documentId', authMiddleware, async (req, res, next) => {
   try {
     const { title, introduction, status } = req.body;
     const { documentId } = req.params;
@@ -89,7 +110,7 @@ router.put("/documents/:documentId", authMiddleware, async (req, res, next) => {
       },
     });
     if (!document) {
-      return res.status(400).json({ message: "이력서 조회에 실패하였습니다." });
+      return res.status(400).json({ message: '이력서 조회에 실패하였습니다.' });
     }
 
     const updateDocument = await prisma.documents.update({
@@ -111,7 +132,7 @@ router.put("/documents/:documentId", authMiddleware, async (req, res, next) => {
 
 // 삭제
 router.delete(
-  "/documents/:documentId",
+  '/documents/:documentId',
   authMiddleware,
   async (req, res, next) => {
     try {
@@ -128,7 +149,7 @@ router.delete(
       if (!document) {
         return res
           .status(400)
-          .json({ message: "이력서 조회에 실패하였습니다." });
+          .json({ message: '이력서 조회에 실패하였습니다.' });
       }
 
       await prisma.documents.delete({
@@ -137,7 +158,7 @@ router.delete(
         },
       });
 
-      return res.status(200).json({ message: "이력서가 삭제되었습니다." });
+      return res.status(200).json({ message: '이력서가 삭제되었습니다.' });
     } catch (err) {
       next(err);
     }
