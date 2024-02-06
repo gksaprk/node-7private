@@ -13,7 +13,7 @@
 
 # ERD URL
 
-- [ERD 작성한 위치 URL 추가](https://www.erdcloud.com/d/ZBGydga327DqBh65N)
+- ERD 작성한 위치 URL 추가
 
 # 더 고민해 보기
 
