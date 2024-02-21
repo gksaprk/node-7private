@@ -16,7 +16,8 @@ app.use(LogMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api', [UsersRouter, DocumentsRouter]);
+app.use('/users', UsersRouter);
+app.use('/documents', DocumentsRouter);
 app.use(ErrorHandlingMiddleware);
 
 app.listen(port, () => {

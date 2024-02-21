@@ -19,7 +19,7 @@ export class UsersRepository {
 
   // 로그인  // ????// 비밀번호가 필요없다 >> service 에서 처리하기 때문에
   loginUsers = async (email) => {
-    const loginedUsers = await prisma.users.findFirst({
+    const loginedUsers = await prisma.users.findUnique({
       where: { email },
     });
 

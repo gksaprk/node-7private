@@ -1,4 +1,6 @@
 import { UsersRepository } from '../repositories/users.repository.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export class UsersService {
   usersRepository = new UsersRepository();
