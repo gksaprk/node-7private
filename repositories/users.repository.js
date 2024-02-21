@@ -1,4 +1,4 @@
-import { prisma } from '@prisma/client';
+import { prisma } from '../models/index.js';
 
 export class UsersRepository {
   // 회원가입
@@ -17,18 +17,15 @@ export class UsersRepository {
     return createUsers;
   };
 
-  // 로그인  // ????
-  loginUsers = async (email, password) => {
+  // 로그인  // ????// 비밀번호가 필요없다 >> service 에서 처리하기 때문에
+  loginUsers = async (email) => {
     const loginedUsers = await prisma.users.findFirst({
-      where: { email, password },
-      data: {
-        password: loginedUsers.password,
-      },
+      where: { email },
     });
 
     // 비밀번호가 맞아야한다.
 
-    return loginUsers;
+    return loginedUsers;
   };
 
   // 사용자 정보 조회

@@ -5,9 +5,11 @@ export class UsersService {
 
   // 회원가입
   createUsers = async (email, password, name, age, gender, profileImage) => {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const createdUsers = await this.usersRepository.createUsers(
       email,
-      password,
+      hashedPassword,
       name,
       age,
       gender,
@@ -28,11 +30,25 @@ export class UsersService {
 
   // 로그인
   loginUsers = async (email, password) => {
-    const loginedUsers = await this.usersRepository.loginUsers(email, password);
+    const loginedUsers = await this.usersRepository.loginUsers(email);
+
+    if (!loginedUsers) {
+      throw new Error('이메일이 존재하지 않습니다.');
+    } else if (!(await bcrypt.compare(password, loginedUsers.password)))
+      throw new Error('비밀번호가 일치하지 않습니다.');
+
+    const token = jwt.sign(
+      { userId: loginedUsers.userId },
+      process.env.SECRET_KEY,
+      { expiresIn: '12h' } // 12시간 유효
+    );
 
     return {
-      userId: loginedUsers.userId,
-      email: loginedUsers.email,
+      data: {
+        userId: loginedUsers.userId,
+        email: loginedUsers.email,
+      },
+      token,
     };
   };
 

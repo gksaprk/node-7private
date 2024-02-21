@@ -1,4 +1,4 @@
-import { prisma } from '@prisma/client';
+import { prisma } from '../models/index.js';
 
 export class DocumentsRepository {
   // 게시글생성

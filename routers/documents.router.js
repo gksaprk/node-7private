@@ -2,26 +2,26 @@ import express from 'express';
 import { prisma } from '../models/index.js';
 import authMiddleware from '../middlewares/need-signin.middlware.js';
 
-import { DocumentsController } from '../controllers/documents.controller.js.';
+import { DocumentsController } from '../controllers/documents.controller.js';
 
 const router = express.Router();
 
 const documentsController = new DocumentsController(); // 인스터화
 
 // 게시글 생성
-router.post('/documents', documentsController.createDocuments);
+router.post('/', documentsController.createDocuments);
 
 // 게시글 목록조회
-router.get('/documents', documentsController.getDocuments);
+router.get('/', documentsController.getDocuments);
 
 // 게시글 상세조회
-router.get('/documents/:documentId', documentsController.getDocument);
+router.get('/:documentId', documentsController.getDocument);
 
 // 게시글 수정
-router.put('/documents/:documentId', documentsController.putDocuments);
+router.put('/:documentId', documentsController.putDocuments);
 
 // 게시글 삭제
-router.delete('/documents/:documentId', documentsController.deleteDocuments);
+router.delete('/:documentId', documentsController.deleteDocuments);
 
 // router.post('/documents', authMiddleware, async (req, res, next) => {
 //   try {
