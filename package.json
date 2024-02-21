@@ -8,17 +8,22 @@
     "dev": "nodemon app.js"
   },
   "dependencies": {
-    "@prisma/client": "^5.9.0",
+    "@prisma/client": "^5.10.1",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
-    "dotenv": "^16.4.1",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mysql21": "^1.0.2",
-    "prisma": "^5.9.0",
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.3"
-  }
+    "@jest/globals": "^29.7.0",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
+    "prisma": "^5.10.1"
+  },
+  "description": "- .env 파일에 어떤 환경변수가 추가되어야 하는지 작성합니다.\r - key=value 형태에서 key만 나열합니다. value는 비밀!",
+  "author": ""
 }

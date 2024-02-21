@@ -2,167 +2,186 @@ import express from 'express';
 import { prisma } from '../models/index.js';
 import authMiddleware from '../middlewares/need-signin.middlware.js';
 
+import { DocumentsController } from '../controllers/documents.controller.js.';
+
 const router = express.Router();
 
-router.post('/documents', authMiddleware, async (req, res, next) => {
-  try {
-    const { title, introduction, name, status } = req.body;
-    const { userId } = req.user;
+const documentsController = new DocumentsController(); // 인스터화
 
-    const document = await prisma.documents.create({
-      data: {
-        userId: +userId,
-        title: title,
-        introduction: introduction,
-        name: name,
-        status: status || 'APPLY',
-      },
-    });
+// 게시글 생성
+router.post('/documents', documentsController.createDocuments);
 
-    return res.status(201).json({ data: document });
-  } catch (err) {
-    next(err);
-  }
-});
-// 목록조회
-router.get('/documents', async (req, res, next) => {
-  try {
-    // const { orderKey, orderValue } = req.query;
+// 게시글 목록조회
+router.get('/documents', documentsController.getDocuments);
 
-    // const allowedOrderKeys = [
-    //   'userId',
-    //   'createdAt',
-    //   'titel',
-    //   'introduction',
-    //   'status',
-    //   'name',
-    //   'updatedAt',
-    // ];
-    // const isValidOrderKey = allowedOrderKeys.includes(orderKey);
+// 게시글 상세조회
+router.get('/documents/:documentId', documentsController.getDocument);
 
-    // if (!isValidOrderKey) {
-    //   return res.status(400).json({ message: '유효하지 않은 키입니다.' });
-    // }
+// 게시글 수정
+router.put('/documents/:documentId', documentsController.putDocuments);
 
-    // const sortOrderValue =
-    //   orderValue?.toUpperCase() === 'DESC' ? 'desc' : 'asc';
+// 게시글 삭제
+router.delete('/documents/:documentId', documentsController.deleteDocuments);
 
-    const documents = await prisma.documents.findMany({
-      select: {
-        documentId: true,
-        userId: true,
-        title: true,
-        name: true,
-        status: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      orderBy: {
-        // [orderKey]: sortOrderValue,
-        createdAt: 'desc', // 게시글을 최신순으로 정렬합니다.
-      },
-    });
+// router.post('/documents', authMiddleware, async (req, res, next) => {
+//   try {
+//     const { title, introduction, name, status } = req.body;
+//     const { userId } = res.locals.user;
 
-    return res.status(200).json({ data: documents });
-  } catch (err) {
-    next(err);
-  }
-});
+//     const document = await prisma.documents.create({
+//       data: {
+//         userId: +userId,
+//         title: title,
+//         introduction: introduction,
+//         name: name,
+//         status: status || 'APPLY',
+//       },
+//     });
 
-//상세조회
+//     return res.status(201).json({ data: document });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+// // 목록조회
+// router.get('/documents', async (req, res, next) => {
+//   try {
+//     // const { orderKey, orderValue } = req.query;
 
-router.get('/documents/:documentId', async (req, res, next) => {
-  try {
-    const { documentId } = req.params;
-    const document = await prisma.documents.findFirst({
-      where: {
-        documentId: +documentId,
-      },
-      select: {
-        documentId: true,
-        userId: true,
-        name: true,
-        title: true,
-        status: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+//     // const allowedOrderKeys = [
+//     //   'userId',
+//     //   'createdAt',
+//     //   'titel',
+//     //   'introduction',
+//     //   'status',
+//     //   'name',
+//     //   'updatedAt',
+//     // ];
+//     // const isValidOrderKey = allowedOrderKeys.includes(orderKey);
 
-    return res.status(200).json({ data: document });
-  } catch (err) {
-    next(err);
-  }
-});
+//     // if (!isValidOrderKey) {
+//     //   return res.status(400).json({ message: '유효하지 않은 키입니다.' });
+//     // }
 
-// 수정
-router.put('/documents/:documentId', authMiddleware, async (req, res, next) => {
-  try {
-    const { title, introduction, status } = req.body;
-    const { documentId } = req.params;
-    const { userId } = req.user;
+//     // const sortOrderValue =
+//     //   orderValue?.toUpperCase() === 'DESC' ? 'desc' : 'asc';
 
-    // 내가 작성한 이력서인지 확인
-    const document = await prisma.documents.findFirst({
-      where: {
-        userId: userId,
-        documentId: +documentId,
-      },
-    });
-    if (!document) {
-      return res.status(400).json({ message: '이력서 조회에 실패하였습니다.' });
-    }
+//     const documents = await prisma.documents.findMany({
+//       select: {
+//         documentId: true,
+//         userId: true,
+//         title: true,
+//         name: true,
+//         status: true,
+//         createdAt: true,
+//         updatedAt: true,
+//       },
+//       orderBy: {
+//         // [orderKey]: sortOrderValue,
+//         createdAt: 'desc', // 게시글을 최신순으로 정렬합니다.
+//       },
+//     });
 
-    const updateDocument = await prisma.documents.update({
-      where: {
-        documentId: +documentId,
-      },
-      data: {
-        title,
-        introduction,
-        status,
-      },
-    });
+//     return res.status(200).json({ data: documents });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
-    return res.status(200).json({ data: updateDocument });
-  } catch (err) {
-    next(err);
-  }
-});
+// //상세조회
 
-// 삭제
-router.delete(
-  '/documents/:documentId',
-  authMiddleware,
-  async (req, res, next) => {
-    try {
-      const { documentId } = req.params;
-      const { userId } = req.user;
+// router.get('/documents/:documentId', async (req, res, next) => {
+//   try {
+//     const { documentId } = req.params;
+//     const document = await prisma.documents.findFirst({
+//       where: {
+//         documentId: +documentId,
+//       },
+//       select: {
+//         documentId: true,
+//         userId: true,
+//         name: true,
+//         title: true,
+//         status: true,
+//         createdAt: true,
+//         updatedAt: true,
+//       },
+//     });
 
-      // 내가 작성한 이력서인지 확인
-      const document = await prisma.documents.findFirst({
-        where: {
-          userId: +userId,
-          documentId: +documentId,
-        },
-      });
-      if (!document) {
-        return res
-          .status(400)
-          .json({ message: '이력서 조회에 실패하였습니다.' });
-      }
+//     return res.status(200).json({ data: document });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
-      await prisma.documents.delete({
-        where: {
-          documentId: +documentId,
-        },
-      });
+// // 수정
+// router.put('/documents/:documentId', authMiddleware, async (req, res, next) => {
+//   try {
+//     const { title, introduction, status } = req.body;
+//     const { documentId } = req.params;
+//     const { userId } = res.locals.user;
 
-      return res.status(200).json({ message: '이력서가 삭제되었습니다.' });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
+//     // 내가 작성한 이력서인지 확인
+//     const document = await prisma.documents.findFirst({
+//       where: {
+//         userId: userId,
+//         documentId: +documentId,
+//       },
+//     });
+//     if (!document) {
+//       return res.status(400).json({ message: '이력서 조회에 실패하였습니다.' });
+//     }
+
+//     const updateDocument = await prisma.documents.update({
+//       where: {
+//         documentId: +documentId,
+//       },
+//       data: {
+//         title,
+//         introduction,
+//         status,
+//       },
+//     });
+
+//     return res.status(200).json({ data: updateDocument });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+// // 삭제
+// router.delete(
+//   '/documents/:documentId',
+//   authMiddleware,
+//   async (req, res, next) => {
+//     try {
+//       const { documentId } = req.params;
+//       const { userId } = res.locals.user;
+
+//       // 내가 작성한 이력서인지 확인
+//       const document = await prisma.documents.findFirst({
+//         where: {
+//           userId: +userId,
+//           documentId: +documentId,
+//         },
+//       });
+//       if (!document) {
+//         return res
+//           .status(400)
+//           .json({ message: '이력서 조회에 실패하였습니다.' });
+//       }
+
+//       await prisma.documents.delete({
+//         where: {
+//           documentId: +documentId,
+//         },
+//       });
+
+//       return res.status(200).json({ message: '이력서가 삭제되었습니다.' });
+//     } catch (err) {
+//       next(err);
+//     }
+//   }
+// );
 
 export default router;
