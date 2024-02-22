@@ -1,11 +1,13 @@
-import { prisma } from '../models/index.js';
-
 export class DocumentsRepository {
+  constructor(prisma) {
+    this.prisma = prisma;
+  }
+
   // 게시글생성
   createDocuments = async (userId, title, introduction, name, status) => {
     userId = parseInt(userId);
 
-    const createdDocuments = await prisma.documents.create({
+    const createdDocuments = await this.prisma.documents.create({
       data: {
         userId,
         title,
@@ -21,7 +23,7 @@ export class DocumentsRepository {
 
   // 게시글 목록조회
   findAllDocuments = async () => {
-    const documents = await prisma.documents.findMany();
+    const documents = await this.prisma.documents.findMany();
 
     return documents;
   };
@@ -30,7 +32,7 @@ export class DocumentsRepository {
   findDocument = async (documentId) => {
     // documentId = parseInt(documentId);
 
-    const document = await prisma.documents.findUnique({
+    const document = await this.prisma.documents.findUnique({
       where: { documentId: parseInt(documentId) },
     });
 
@@ -39,7 +41,7 @@ export class DocumentsRepository {
 
   // 게시글 수정
   putDocuments = async (documentId, title, introduction, status) => {
-    const documents = await prisma.documents.update({
+    const documents = await this.prisma.documents.update({
       where: { documentId: parseInt(documentId) },
       data: {
         title,
@@ -53,7 +55,7 @@ export class DocumentsRepository {
 
   // 게시글 삭제
   deleteDocuments = async (documentId) => {
-    const documents = await prisma.documents.delete({
+    const documents = await this.prisma.documents.delete({
       where: {
         documentId: parseInt(documentId),
       },

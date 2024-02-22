@@ -3,10 +3,14 @@ import { prisma } from '../models/index.js';
 import authMiddleware from '../middlewares/need-signin.middlware.js';
 
 import { DocumentsController } from '../controllers/documents.controller.js';
+import { DocumentsService } from '../services/documentes.service.js';
+import { DocumentsRepository } from '../repositories/documentes.repository.js';
 
 const router = express.Router();
 
-const documentsController = new DocumentsController(); // 인스터화
+const documentsRepository = new DocumentsRepository(prisma);
+const documentsService = new DocumentsService(documentsRepository);
+const documentsController = new DocumentsController(documentsService); // 인스터화
 
 // 게시글 생성
 router.post('/', authMiddleware, documentsController.createDocuments);

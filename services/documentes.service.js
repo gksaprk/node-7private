@@ -1,13 +1,21 @@
-import { DocumentsRepository } from '../repositories/documentes.repositiory.js';
-
 export class DocumentsService {
-  documentsRepository = new DocumentsRepository();
+  constructor(documentsRepository) {
+    this.documentsRepository = documentsRepository;
+  }
 
   // 게시글 생성
-  createDocuments = async (userId, title, introduction, name, status) => {
+  createDocuments = async (
+    userId,
+    title,
+
+    introduction,
+    name,
+    status
+  ) => {
     const createdDocuments = await this.documentsRepository.createDocuments(
       userId,
       title,
+
       introduction,
       name,
       status

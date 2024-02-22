@@ -1,7 +1,7 @@
-import { DocumentsService } from '../services/documentes.service.js';
-
 export class DocumentsController {
-  documentsService = new DocumentsService();
+  constructor(documentsService) {
+    this.documentsService = documentsService;
+  }
 
   // 게시글 생성
   createDocuments = async (req, res, next) => {
@@ -72,6 +72,7 @@ export class DocumentsController {
   deleteDocuments = async (req, res, next) => {
     try {
       const { documentId } = req.params;
+
       // const { userId } = res.locals.user;
       const deletedDocuments = await this.documentsService.deleteDocuments(
         documentId
