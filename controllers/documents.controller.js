@@ -7,8 +7,10 @@ export class DocumentsController {
   createDocuments = async (req, res, next) => {
     try {
       const { title, introduction, name, status } = req.body;
+      const { userId } = res.locals.user;
 
       const createDocuments = await this.documentsService.createDocuments(
+        userId,
         title,
         introduction,
         name,
@@ -38,7 +40,7 @@ export class DocumentsController {
     try {
       const { documentId } = req.params;
 
-      const getdocument = await documentsService.findDocument(documentId);
+      const getdocument = await this.documentsService.findDocument(documentId);
 
       return res.status(200).json({ data: getdocument });
     } catch (err) {
@@ -69,15 +71,13 @@ export class DocumentsController {
   // 게시글 삭제
   deleteDocuments = async (req, res, next) => {
     try {
-      const { password } = req.body;
       const { documentId } = req.params;
       // const { userId } = res.locals.user;
-      const deleteDocuments = await this.documentsService.deleteDocuments(
-        password,
+      const deletedDocuments = await this.documentsService.deleteDocuments(
         documentId
       );
 
-      return res.status(200).json({ data: deleteDocuments });
+      return res.status(200).json({ data: deletedDocuments });
     } catch (err) {
       next(err);
     }

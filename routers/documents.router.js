@@ -9,19 +9,23 @@ const router = express.Router();
 const documentsController = new DocumentsController(); // 인스터화
 
 // 게시글 생성
-router.post('/', documentsController.createDocuments);
+router.post('/', authMiddleware, documentsController.createDocuments);
 
 // 게시글 목록조회
-router.get('/', documentsController.getDocuments);
+router.get('/', authMiddleware, documentsController.getDocuments);
 
 // 게시글 상세조회
-router.get('/:documentId', documentsController.getDocument);
+router.get('/:documentId', authMiddleware, documentsController.getDocument);
 
 // 게시글 수정
-router.put('/:documentId', documentsController.putDocuments);
+router.put('/:documentId', authMiddleware, documentsController.putDocuments);
 
 // 게시글 삭제
-router.delete('/:documentId', documentsController.deleteDocuments);
+router.delete(
+  '/:documentId',
+  authMiddleware,
+  documentsController.deleteDocuments
+);
 
 // router.post('/documents', authMiddleware, async (req, res, next) => {
 //   try {

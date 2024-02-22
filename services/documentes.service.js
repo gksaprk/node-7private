@@ -4,8 +4,9 @@ export class DocumentsService {
   documentsRepository = new DocumentsRepository();
 
   // 게시글 생성
-  createDocuments = async (title, introduction, name, status) => {
-    const createDocuments = await this.documentsRepository.createDocuments(
+  createDocuments = async (userId, title, introduction, name, status) => {
+    const createdDocuments = await this.documentsRepository.createDocuments(
+      userId,
       title,
       introduction,
       name,
@@ -13,13 +14,13 @@ export class DocumentsService {
     );
 
     return {
-      documentId: createDocuments.documentId,
-      title: createDocuments.title,
-      introduction: createDocuments.introduction,
-      name: createDocuments.name,
-      status: createDocuments.status,
-      createdAt: createDocuments.createdAt,
-      updatedAt: createDocuments.updatedAt,
+      documentId: createdDocuments.documentId,
+      title: createdDocuments.title,
+      introduction: createdDocuments.introduction,
+      name: createdDocuments.name,
+      status: createdDocuments.status,
+      createdAt: createdDocuments.createdAt,
+      updatedAt: createdDocuments.updatedAt,
     };
   };
 
@@ -89,12 +90,12 @@ export class DocumentsService {
   };
 
   // 게시글 삭제
-  deleteDocuments = async (documentId, password) => {
+  deleteDocuments = async (documentId) => {
     const documents = await this.documentsRepository.findDocument(documentId);
 
     if (!documents) throw new Error('존재하지 않는 게시글입니다.');
 
-    await this.documentsRepository.deleteDocuments(documentId, password);
+    await this.documentsRepository.deleteDocuments(documentId);
 
     return {
       documentId: documents.documentId,

@@ -29,7 +29,8 @@ export class UsersController {
       const { email, password } = req.body;
 
       const loginedUsers = await this.usersService.loginUsers(email, password);
-
+      // 토큰 값 따로 설정해야한다.
+      res.cookie('authorization', `Bearer ${loginedUsers.token}`);
       return res.status(200).json({ data: loginedUsers });
     } catch (err) {
       next(err);
